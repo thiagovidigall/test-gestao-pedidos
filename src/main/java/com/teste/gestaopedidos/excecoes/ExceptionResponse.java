@@ -1,4 +1,4 @@
-package com.teste.gestaopedidos.exceptions;
+package com.teste.gestaopedidos.excecoes;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

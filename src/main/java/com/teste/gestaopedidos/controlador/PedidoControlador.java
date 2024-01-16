@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +46,7 @@ public class PedidoControlador {
     )
     public ResponseEntity<List<PedidoResponse>>  listaTodas(
             @Parameter(description = "Número do controle") @RequestParam(required = false) Long numero,
-            @Parameter(description = "Data de cadastro") @RequestParam(required = false) String data){
+            @Parameter(description = "Data de cadastro") @RequestParam(required = false) String data) throws Exception {
 
         var resultado = servico.listarTodas(numero, data);
         return resultado.isEmpty() ? ResponseEntity.status(HttpStatus.NOT_FOUND).body(resultado) : ResponseEntity.ok(resultado);

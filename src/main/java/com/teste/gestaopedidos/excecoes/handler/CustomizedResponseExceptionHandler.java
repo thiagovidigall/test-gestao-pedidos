@@ -1,8 +1,8 @@
-package com.teste.gestaopedidos.exceptions.handler;
+package com.teste.gestaopedidos.excecoes.handler;
 
-import com.teste.gestaopedidos.exceptions.ExceptionResponse;
-import com.teste.gestaopedidos.exceptions.NumeroControlePedidoDuplicadoException;
-import com.teste.gestaopedidos.exceptions.NumeroDePedidosExcedidoException;
+import com.teste.gestaopedidos.excecoes.ExceptionResponse;
+import com.teste.gestaopedidos.excecoes.NumeroControleJaExistenteNoBancoDeDadosException;
+import com.teste.gestaopedidos.excecoes.NumeroDePedidosExcedidoException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -35,7 +35,7 @@ public class CustomizedResponseExceptionHandler extends ResponseEntityExceptionH
         return  new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(NumeroControlePedidoDuplicadoException.class)
+    @ExceptionHandler(NumeroControleJaExistenteNoBancoDeDadosException.class)
     public final ResponseEntity<ExceptionResponse> handlerBadRequestNumeroControlePedidoDuplicadoExceptions(Exception ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(
                 new Date(),

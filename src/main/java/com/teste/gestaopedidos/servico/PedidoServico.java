@@ -3,9 +3,10 @@ package com.teste.gestaopedidos.servico;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.teste.gestaopedidos.entidade.Cliente;
 import com.teste.gestaopedidos.entidade.Pedido;
-import com.teste.gestaopedidos.exceptions.DataCadastroInvalidaException;
-import com.teste.gestaopedidos.exceptions.NumeroControlePedidoDuplicadoException;
-import com.teste.gestaopedidos.exceptions.NumeroDePedidosExcedidoException;
+import com.teste.gestaopedidos.excecoes.CampoNuloException;
+import com.teste.gestaopedidos.excecoes.DataCadastroInvalidaException;
+import com.teste.gestaopedidos.excecoes.NumeroControleJaExistenteNoBancoDeDadosException;
+import com.teste.gestaopedidos.excecoes.NumeroDePedidosExcedidoException;
 import com.teste.gestaopedidos.repositorio.PedidoRepositorio;
 import com.teste.gestaopedidos.seguranca.ClienteResponse;
 import com.teste.gestaopedidos.seguranca.PedidoRequest;
@@ -68,11 +69,35 @@ public class PedidoServico {
             pedidos.add(pedido);
         }
 
+        validarCampos(pedidos);
         validarPedidos(pedidos);
 
         List<Pedido> pedidosDb = pedidos.stream().map(this::mapPedidoRequestToPedido).toList();
         var resultado = repositorio.saveAll(pedidosDb);
         return resultado.stream().map(this::mapPedidoToPedidoResponse).toList();
+    }
+
+    private void validarCampos(List<PedidoRequest> pedidos) {
+        for (PedidoRequest pedido : pedidos) {
+            String msg = "";
+            if(pedido.getNumero() == null){
+                msg = "O número do pedido não pode ser nulo.";
+            }
+
+            if(pedido.getProduto() == null){
+                msg = "O nome do produto não pode ser nulo.";
+            }
+
+            if(pedido.getValor() == null){
+                msg = "O valor do pedido não pode ser nulo.";
+            }
+            if(pedido.getClienteId() == null){
+                msg = "O cliente do pedido não pode ser nulo.";
+            }
+            if (!msg.equals("")){
+                throw new CampoNuloException(msg);
+            }
+        }
     }
 
     private void validarPedidos(List<PedidoRequest> pedidos) {
@@ -89,7 +114,7 @@ public class PedidoServico {
                 .toList();
 
         if (controlesJaCadastrados.size() > 0) {
-            throw new NumeroControlePedidoDuplicadoException("O arquivo com o(s) pedido(s) não pode(em) ser cadastrado(s) pois exite(m) o(s) seguinte(s) número(s) de controle cadastrado(s): " + controlesJaCadastrados.toString());
+            throw new NumeroControleJaExistenteNoBancoDeDadosException("O arquivo com o(s) pedido(s) não pode(em) ser cadastrado(s) pois exite(m) o(s) seguinte(s) número(s) de controle cadastrado(s): " + controlesJaCadastrados.toString());
         }
     }
 
