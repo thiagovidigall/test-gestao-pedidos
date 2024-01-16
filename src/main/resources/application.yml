@@ -1,0 +1,24 @@
+server:
+    port: 8080
+spring:
+    datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost/gestao_pedidos_db?useTimezone=true&serverTimezone=America/Sao_Paulo
+        username: user_gestao
+        password: 123456
+    jpa:
+        open-in-view: false
+        hibernate:
+            ddl-auto: none
+        show-sql: true
+    servlet:
+        multipart:
+            enabled: true
+            file-size-threshold: 2KB
+            max-file-size: 5MB
+            max-request-size: 5MB
+springdoc:
+    pathsToMach: /api/**/v1/**
+    swagger-ui:
+        use-root-path: true
+
